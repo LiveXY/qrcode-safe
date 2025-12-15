@@ -1,22 +1,10 @@
-export enum AppScreen {
-  HOME = 'HOME',
-  SCAN_QR = 'SCAN_QR',
-  SCAN_RESULT = 'SCAN_RESULT',
-  READ_FILE = 'READ_FILE',
-  READ_RESULT = 'READ_RESULT'
-}
-
-export interface SecurityContext {
-  key: string; // Hex string
-  iv: string;  // Hex string
+export enum AppRoute {
+  HOME = 'home',
+  SCAN = 'scan',
+  READ = 'read',
 }
 
 export interface EncryptedFileContent {
-  ciphertext: string;
-}
-
-// Defines the structure of the .qrd file content (JSON)
-export interface QRDFile {
-  version: string;
-  data: string; // Base64 encrypted string
+  data: string; // Base64 encoded encrypted string
+  // Note: We purposefully do not store salt/IV here as per requirements to derive them solely from password deterministically
 }

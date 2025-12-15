@@ -1,6 +1,6 @@
 {
-  "name": "安全二维码保险箱",
-  "description": "一个安全、可离线使用的应用程序，用于使用 AES-256 标准扫描、加密和管理二维码数据。",
+  "name": "安全密盾 (Secure QR)",
+  "description": "一个安全、本地化的二维码加密存储工具。支持AES-256加密，保障数据安全。",
   "requestFramePermissions": [
     "camera"
   ]
