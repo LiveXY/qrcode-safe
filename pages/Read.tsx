@@ -39,7 +39,8 @@ const Read: React.FC = () => {
       const encryptedContent = event.target?.result as string;
       if (encryptedContent) {
         try {
-          const content = await decryptData(encryptedContent, password);
+          // Robustly trim the content to remove potential BOM or trailing newlines
+          const content = await decryptData(encryptedContent.trim(), password);
           setDecryptedContent(content);
         } catch (err) {
           setError(err instanceof Error ? err.message : '解密失败');

@@ -28,7 +28,17 @@ const ab2base64 = (buf: ArrayBuffer): string => {
 
 // Helper to convert Base64 to ArrayBuffer
 const base642ab = (base64: string): ArrayBuffer => {
-  const binary_string = window.atob(base64);
+  // Robustly handle padding
+  let binary_string = base64;
+  const padding = '='.repeat((4 - base64.length % 4) % 4);
+  binary_string += padding;
+
+  try {
+    binary_string = window.atob(binary_string);
+  } catch (e) {
+    throw new Error('Base64 解码失败，文件格式可能已损坏');
+  }
+
   const len = binary_string.length;
   const bytes = new Uint8Array(len);
   for (let i = 0; i < len; i++) {
@@ -101,8 +111,15 @@ export const encryptData = async (plainText: string, password: string): Promise<
 
 export const decryptData = async (encryptedBase64: string, password: string): Promise<string> => {
   try {
+    // Robust cleanup: remove all whitespace including newlines which might be added by file editors
+    const cleanBase64 = encryptedBase64.replace(/\s/g, '');
+    
+    if (!cleanBase64) {
+      throw new Error('文件内容为空');
+    }
+
     const { key, iv } = await deriveKeyAndIV(password);
-    const encryptedBuffer = base642ab(encryptedBase64);
+    const encryptedBuffer = base642ab(cleanBase64);
 
     const decryptedBuffer = await window.crypto.subtle.decrypt(
       {
